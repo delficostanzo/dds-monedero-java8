@@ -14,6 +14,8 @@ public class Cuenta {
   private double saldo = 0;
   private List<Movimiento> movimientos = new ArrayList<>();
 
+  // En el contructor Cuenta() no se puede instanciar de dos maneras distintas "saldo", el tipo de code smell que identifico aca es el de Duplicated Code
+  // porque se repite logica. Se escriben de dos maneras la misma idea de codigo, cuando el saldo podria considerarse como 0 o que sea una variable generica.
   public Cuenta() {
     saldo = 0;
   }
@@ -22,16 +24,23 @@ public class Cuenta {
     saldo = montoInicial;
   }
 
+  // En el caso de setMovimientos(List<Movimiento> movimientos), considero que hay code smell del tipo Misplaced method porque setMovimientos se lo podria considerar como un constructor,
+  // ya que esta inicializando la lista de movimientos, que lo puede hacer directamente en el constructor "Cuenta()" que ya esta creado arriba.
   public void setMovimientos(List<Movimiento> movimientos) {
     this.movimientos = movimientos;
   }
+
+  // En el metodo "poner(double cuanto)" lo considero como un Misplaced method porque no esta utilizando ninguna variable de la clase "Cuenta" ni esta
+  // utilizando comportamiento interno. Tranquilamente podria ir directo en la clase Movimiento.
+  // Tambien considere que podria ser un tipo de code smell Feature Envy, ya que el metodo poner() le evia demasiados mensajes
+  // a la clase Movimiento. Podria ser directamente la responsabilidad del Movimiento enviarle la informacion que le pide
+  // delegando. --> No estaba segura si el Feature Envy esta bien considerado pero lo agregue por las dudas.
 
   public void poner(double cuanto) {
     if (cuanto <= 0) {
       throw new MontoNegativoException(cuanto + ": el monto a ingresar debe ser un valor positivo");
     }
-
-    if (getMovimientos().stream().filter(movimiento -> movimiento.isDeposito()).count() >= 3) {
+     if (getMovimientos().stream().filter(movimiento -> movimiento.isDeposito()).count() >= 3) {
       throw new MaximaCantidadDepositosException("Ya excedio los " + 3 + " depositos diarios");
     }
 
@@ -45,6 +54,8 @@ public class Cuenta {
     if (getSaldo() - cuanto < 0) {
       throw new SaldoMenorException("No puede sacar mas de " + getSaldo() + " $");
     }
+    // En este caso tambien se puede considerar como un tipo de code smell Feature Envy porque
+    // la informacion que se busca en getMontoExtraidoA() se la podria enviar directamente la clase Movimiento en un submetodo.
     double montoExtraidoHoy = getMontoExtraidoA(LocalDate.now());
     double limite = 1000 - montoExtraidoHoy;
     if (cuanto > limite) {
@@ -66,7 +77,7 @@ public class Cuenta {
         .sum();
   }
 
-  public List<Movimiento> getMovimientos() {
+   public List<Movimiento> getMovimientos() {
     return movimientos;
   }
 
@@ -74,6 +85,8 @@ public class Cuenta {
     return saldo;
   }
 
+  // Aca hay tambien Duplicate code como estaba arriba. Usar un constructor es casi lo mismo que el setter. Si ya tenemos
+  // el constructor, no es necesario que usemos el setter.
   public void setSaldo(double saldo) {
     this.saldo = saldo;
   }
