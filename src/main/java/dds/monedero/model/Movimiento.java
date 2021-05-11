@@ -23,6 +23,9 @@ public class Movimiento {
     return fecha;
   }
 
+  // En fueDepositado() y fueExtraido() se puede considerar como que hay un poco de repeticion de logica (duplicate code) porque
+  // ambas abarcan la misma idea, lo unico que cambia es que en uno fue depositado y en el otro fue extraido. Capaz se podria considerar
+  // hacer un metodo solo donde haya una condicion que diga que si esDeposito es true y es de una determinada fecha, entonces fueDepositado. Caso contrario fue extraido.
   public boolean fueDepositado(LocalDate fecha) {
     return isDeposito() && esDeLaFecha(fecha);
   }
@@ -42,6 +45,7 @@ public class Movimiento {
   public boolean isExtraccion() {
     return !esDeposito;
   }
+
 
   public void agregateA(Cuenta cuenta) {
     cuenta.setSaldo(calcularValor(cuenta));
