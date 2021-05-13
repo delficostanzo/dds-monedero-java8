@@ -11,10 +11,10 @@ public abstract class Movimiento {
   // que heredan de Movimiento que se llamen Deposito y Extraido y que tengan comportamiento (Primitive Obsession)
 
   // y hacer que hereden esta funcion
-  public double calcularValor(Cuenta cuenta) {
+  public double calcularValor(double saldo) {
     //de todas formas, me genera un poco de ruido que hereden este metodo. Porque la clase Deposito tiene el mismo comportamiento.
     // No se si esta bien que hereden de esta manera.
-    return cuenta.getSaldo() + this.getMonto();
+    return saldo + this.getMonto();
   }
 
   public Movimiento(LocalDate fecha, double monto/*, boolean esDeposito*/) {
@@ -74,8 +74,8 @@ class Deposito extends Movimiento{
     super(fecha, monto);
   }
 
-  public double calcularValor(Cuenta cuenta){
-    return cuenta.getSaldo() + this.getMonto();
+  public double calcularValor(double saldo){
+    return saldo + this.getMonto();
   }
 }
 
@@ -85,7 +85,7 @@ class Extraccion extends Movimiento{
     super(fecha, monto);
   }
 
-  public double calcularValor(Cuenta cuenta){
-    return cuenta.getSaldo() - this.getMonto();
+  public double calcularValor(double saldo){
+    return saldo - this.getMonto();
   }
 }

@@ -45,6 +45,18 @@ public class Cuenta {
     }
   }
 
+  void agregarDeposito(LocalDate fecha, double monto){
+    Deposito movimiento = new Deposito(fecha, monto);
+    depositos.add(movimiento);
+    saldo = movimiento.calcularValor(this.saldo);
+  }
+
+  void agregarExtraccion(LocalDate fecha, double monto){
+    Extraccion movimiento = new Extraccion(fecha, monto);
+    extracciones.add(movimiento);
+    saldo = movimiento.calcularValor(this.saldo);
+  }
+
   public void poner(double cuanto) {
     validarSiEsMontoNegativo(cuanto);
 
@@ -53,8 +65,7 @@ public class Cuenta {
       throw new MaximaCantidadDepositosException("Ya excedio los " + 3 + " depositos diarios");
     }
      this.saldo = saldo + cuanto;
-    Movimiento nuevoMovimiento = new Movimiento(LocalDate.now(), cuanto, true);
-    this.agregarMovimiento(nuevoMovimiento);
+    this.agregarDeposito(LocalDate.now(),cuanto);
   }
 
   public void sacar(double cuanto) {
@@ -73,26 +84,30 @@ public class Cuenta {
     }
 
     this.saldo = saldo - cuanto;
-    Movimiento nuevoMovimiento = new Movimiento(LocalDate.now(), cuanto, false);
-    this.agregarMovimiento(nuevoMovimiento);
+    this.agregarExtraccion(LocalDate.now(),cuanto);
   }
 
+  // Como cambie la lista de movimientos, este metodo ya no se utiliza
+  /*
   public void agregarMovimiento(Movimiento movimiento) {
     // Es mas sencillo llamar directamente al movimiento que ya se creo
     // Movimiento movimiento = new Movimiento(fecha, cuanto, esDeposito);
     movimientos.add(movimiento);
   }
+*/
 
   public double getMontoExtraidoA(LocalDate fecha) {
-    return getMovimientos().stream()
-        .filter(movimiento -> !movimiento.isDeposito() && movimiento.getFecha().equals(fecha))
-        .mapToDouble(Movimiento::getMonto)
+    return extracciones.stream().
+        filter(movimiento -> movimiento.getFecha().equals(fecha))
+        .mapToDouble(movimiento -> movimiento.getMonto())
         .sum();
   }
 
+  /* Al cambiar la lista de movimientos, este metodo no se usa
    public List<Movimiento> getMovimientos() {
     return movimientos;
   }
+*/
 
   public double getSaldo() {
     return saldo;
