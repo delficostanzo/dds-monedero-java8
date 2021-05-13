@@ -43,6 +43,7 @@ public class Cuenta {
   public void poner(double cuanto) {
     validarSiEsMontoNegativo(cuanto);
 
+    // Hay Message Chains dentro de la condicion del if, podria delegarse
      if (getMovimientos().stream().filter(movimiento -> movimiento.isDeposito()).count() >= 3) {
       throw new MaximaCantidadDepositosException("Ya excedio los " + 3 + " depositos diarios");
     }
@@ -78,8 +79,6 @@ public class Cuenta {
   }
 
   public double getMontoExtraidoA(LocalDate fecha) {
-    // Se podria encontrar en este caso tambien un code smell del tipo Message Chains ya que todo lo que devuelve ese return
-    // se podria delegar en otro metodo.
     return getMovimientos().stream()
         .filter(movimiento -> !movimiento.isDeposito() && movimiento.getFecha().equals(fecha))
         .mapToDouble(Movimiento::getMonto)
@@ -96,8 +95,8 @@ public class Cuenta {
 
   // Aca hay tambien Duplicate code como estaba arriba. Usar un constructor es casi lo mismo que el setter. Si ya tenemos
   // el constructor, no es necesario que usemos el setter.
-  public void setSaldo(double saldo) {
+  /*public void setSaldo(double saldo) {
     this.saldo = saldo;
   }
-
+*/
 }

@@ -2,17 +2,23 @@ package dds.monedero.model;
 
 import java.time.LocalDate;
 
-public class Movimiento {
+public abstract class Movimiento {
   private LocalDate fecha;
   //En ningún lenguaje de programación usen jamás doubles para modelar dinero en el mundo real
   //siempre usen numeros de precision arbitraria, como BigDecimal en Java y similares
   private double monto;
-  private boolean esDeposito;
+  // private boolean esDeposito; // Algo que pense es que esDeposito, en vez de ser un booleando, podria comportarse como dos clases
+  // que heredan de Movimiento que se llamen Deposito y Extraido y que tengan comportamiento (Primitive Obsession)
 
-  public Movimiento(LocalDate fecha, double monto, boolean esDeposito) {
+  // y hacer que hereden esta funcion
+  public double calcularValor(Cuenta cuenta) {
+    return cuenta.getSaldo() + this.getMonto();
+  }
+
+  public Movimiento(LocalDate fecha, double monto/*, boolean esDeposito*/) {
     this.fecha = fecha;
     this.monto = monto;
-    this.esDeposito = esDeposito;
+    //this.esDeposito = esDeposito;
   }
 
   public double getMonto() {
@@ -55,11 +61,26 @@ public class Movimiento {
   }
 */
 
-  public double calcularValor(Cuenta cuenta) {
-    if (esDeposito) {
-      return cuenta.getSaldo() + getMonto();
-    } else {
-      return cuenta.getSaldo() - getMonto();
-    }
+
+}
+
+class Deposito extends Movimiento{
+  public Deposito(LocalDate fecha, double monto){
+    super(fecha, monto);
+  }
+
+  public double calcularValor(Cuenta cuenta){
+  //TODO: agregar comportamiento
+  }
+}
+
+
+class Extraccion extends Movimiento{
+  public Extraccion(LocalDate fecha, double monto){
+    super(fecha, monto);
+  }
+
+  public double calcularValor(Cuenta cuenta){
+  // TODO: agregar comportamiento
   }
 }
