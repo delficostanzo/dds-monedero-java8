@@ -11,14 +11,15 @@ import java.util.List;
 
 public class Cuenta {
 
-  private double saldo = 0;
+  private double saldo;
   private List<Movimiento> movimientos = new ArrayList<>();
 
   // En el contructor Cuenta() no se puede instanciar de dos maneras distintas "saldo", el tipo de code smell que identifico aca es el de Duplicated Code
   // porque se repite logica. Se escriben de dos maneras la misma idea de codigo, cuando el saldo podria considerarse como 0 o que sea una variable generica.
-   public Cuenta() {
+   /* public Cuenta() {
     saldo = 0;
   }
+  */
 
   public Cuenta(double montoInicial) {
     saldo = montoInicial;
