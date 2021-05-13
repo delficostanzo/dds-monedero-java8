@@ -47,7 +47,8 @@ public class Cuenta {
       throw new MaximaCantidadDepositosException("Ya excedio los " + 3 + " depositos diarios");
     }
      this.saldo = saldo + cuanto;
-    new Movimiento(LocalDate.now(), cuanto, true).agregateA(this);
+    Movimiento nuevoMovimiento = new Movimiento(LocalDate.now(), cuanto, true);
+    this.agregarMovimiento(nuevoMovimiento);
   }
 
   public void sacar(double cuanto) {
@@ -66,11 +67,13 @@ public class Cuenta {
     }
 
     this.saldo = saldo - cuanto;
-    new Movimiento(LocalDate.now(), cuanto, false).agregateA(this);
+    Movimiento nuevoMovimiento = new Movimiento(LocalDate.now(), cuanto, false);
+    this.agregarMovimiento(nuevoMovimiento);
   }
 
-  public void agregarMovimiento(LocalDate fecha, double cuanto, boolean esDeposito) {
-    Movimiento movimiento = new Movimiento(fecha, cuanto, esDeposito);
+  public void agregarMovimiento(Movimiento movimiento) {
+    // Es mas sencillo llamar directamente al movimiento que ya se creo
+    // Movimiento movimiento = new Movimiento(fecha, cuanto, esDeposito);
     movimientos.add(movimiento);
   }
 

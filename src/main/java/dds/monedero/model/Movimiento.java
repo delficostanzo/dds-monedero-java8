@@ -47,10 +47,13 @@ public class Movimiento {
   }
 
 
-  public void agregateA(Cuenta cuenta) {
+  // En este caso hay Feature Envy porque este metodo podria hacer su comportamiento directamente en Cuenta.
+  // Ademas hay repeticion de logica con la funcion agregarMovimiento()
+  /* public void agregateA(Cuenta cuenta) {
     cuenta.setSaldo(calcularValor(cuenta));
     cuenta.agregarMovimiento(fecha, monto, esDeposito);
   }
+*/
 
   public double calcularValor(Cuenta cuenta) {
     if (esDeposito) {
