@@ -32,16 +32,17 @@ public class Cuenta {
   }
 
 
-  // En el metodo "poner(double cuanto)" lo considero como un Misplaced method porque no esta utilizando ninguna variable de la clase "Cuenta" ni esta
-  // utilizando comportamiento interno. Tranquilamente podria ir directo en la clase Movimiento.
-  // Tambien considere que podria ser un tipo de code smell Feature Envy, ya que el metodo poner() le evia demasiados mensajes
-  // a la clase Movimiento. Podria ser directamente la responsabilidad del Movimiento enviarle la informacion que le pide
-  // delegando. --> No estaba segura si el Feature Envy esta bien considerado pero lo agregue por las dudas.
-
-  public void poner(double cuanto) {
+  // En el caso de poner y sacar hay Duplicate code porque hacen cosas parecidas. Dentro de ambas se podria delegar la primer condicion, de esta forma no se repite tanto la logica.
+  // Ademas faltaria modificar el saldo de la cuenta cada vez que se saca y pone plata en la cuenta.
+  public void validarSiEsMontoNegativo(double cuanto){
     if (cuanto <= 0) {
       throw new MontoNegativoException("El monto a ingresar debe ser un valor positivo");
     }
+  }
+
+  public void poner(double cuanto) {
+    validarSiEsMontoNegativo(cuanto);
+
      if (getMovimientos().stream().filter(movimiento -> movimiento.isDeposito()).count() >= 3) {
       throw new MaximaCantidadDepositosException("Ya excedio los " + 3 + " depositos diarios");
     }
@@ -50,9 +51,8 @@ public class Cuenta {
   }
 
   public void sacar(double cuanto) {
-    if (cuanto <= 0) {
-      throw new MontoNegativoException(cuanto + ": el monto a ingresar debe ser un valor positivo");
-    }
+    validarSiEsMontoNegativo(cuanto);
+
     if (getSaldo() - cuanto < 0) {
       throw new SaldoMenorException("No puede sacar mas de " + getSaldo() + " $");
     }
