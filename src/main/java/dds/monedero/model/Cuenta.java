@@ -12,7 +12,11 @@ import java.util.List;
 public class Cuenta {
 
   private double saldo;
-  private List<Movimiento> movimientos = new ArrayList<>();
+  // private List<Movimiento> movimientos = new ArrayList<>();
+  // Al haber hecho una herencia, considere mas facil que la cuenta conozca dos listas que sea una de las extraccion y otra de los depositos que hizo
+  private List<Deposito> depositos = new ArrayList<>();
+  private List<Extraccion> extracciones = new ArrayList<>();
+
 
   // En el contructor Cuenta() no se puede instanciar de dos maneras distintas "saldo", el tipo de code smell que identifico aca es el de Duplicated Code
   // porque se repite logica. Se escriben de dos maneras la misma idea de codigo, cuando el saldo podria considerarse como 0 o que sea una variable generica.
@@ -27,10 +31,11 @@ public class Cuenta {
 
   // En el caso de setMovimientos(List<Movimiento> movimientos), considero que habria que analizar si es necesario que este este setter ya que si no
   // se utiliza para otras clases, no es necesario que se cree.
-    public void setMovimientos(List<Movimiento> movimientos) {
+ /*   public void setMovimientos(List<Movimiento> movimientos) {
     this.movimientos = movimientos;
   }
-
+  AL HABER SACADO ESTA LISTA, NO SIRVE MAS ESTA FUNCION
+  */
 
   // En el caso de poner y sacar hay Duplicate code porque hacen cosas parecidas. Dentro de ambas se podria delegar la primer condicion, de esta forma no se repite tanto la logica.
   // Ademas faltaria modificar el saldo de la cuenta cada vez que se saca y pone plata en la cuenta.
@@ -44,7 +49,7 @@ public class Cuenta {
     validarSiEsMontoNegativo(cuanto);
 
     // Hay Message Chains dentro de la condicion del if, podria delegarse
-     if (getMovimientos().stream().filter(movimiento -> movimiento.isDeposito()).count() >= 3) {
+     if (depositos.size() >= 3) {
       throw new MaximaCantidadDepositosException("Ya excedio los " + 3 + " depositos diarios");
     }
      this.saldo = saldo + cuanto;
