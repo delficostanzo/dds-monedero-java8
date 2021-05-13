@@ -12,6 +12,8 @@ public abstract class Movimiento {
 
   // y hacer que hereden esta funcion
   public double calcularValor(Cuenta cuenta) {
+    //de todas formas, me genera un poco de ruido que hereden este metodo. Porque la clase Deposito tiene el mismo comportamiento.
+    // No se si esta bien que hereden de esta manera.
     return cuenta.getSaldo() + this.getMonto();
   }
 
@@ -32,26 +34,29 @@ public abstract class Movimiento {
   // En fueDepositado() y fueExtraido() se puede considerar como que hay un poco de repeticion de logica (duplicate code) porque
   // ambas abarcan la misma idea, lo unico que cambia es que en uno fue depositado y en el otro fue extraido. Capaz se podria considerar
   // hacer un metodo solo donde haya una condicion que diga que si esDeposito es true y es de una determinada fecha, entonces fueDepositado. Caso contrario fue extraido.
-  public boolean fueDepositado(LocalDate fecha) {
+  /* public boolean fueDepositado(LocalDate fecha) {
     return isDeposito() && esDeLaFecha(fecha);
   }
 
   public boolean fueExtraido(LocalDate fecha) {
     return isExtraccion() && esDeLaFecha(fecha);
   }
+  En este caso, ahora que hay herencia y se crean las clases extraido y deposito. No sirven estos dos metodos
+*/
 
   public boolean esDeLaFecha(LocalDate fecha) {
     return this.fecha.equals(fecha);
   }
 
-  public boolean isDeposito() {
+  // al haber creado una herencia, estas dos funciones ya no me sirven
+ /* public boolean isDeposito() {
     return esDeposito;
   }
 
   public boolean isExtraccion() {
     return !esDeposito;
   }
-
+*/
 
   // En este caso hay Feature Envy porque este metodo podria hacer su comportamiento directamente en Cuenta.
   // Ademas hay repeticion de logica con la funcion agregarMovimiento()
@@ -70,7 +75,7 @@ class Deposito extends Movimiento{
   }
 
   public double calcularValor(Cuenta cuenta){
-  //TODO: agregar comportamiento
+    return cuenta.getSaldo() + this.getMonto();
   }
 }
 
@@ -81,6 +86,6 @@ class Extraccion extends Movimiento{
   }
 
   public double calcularValor(Cuenta cuenta){
-  // TODO: agregar comportamiento
+    return cuenta.getSaldo() - this.getMonto();
   }
 }
