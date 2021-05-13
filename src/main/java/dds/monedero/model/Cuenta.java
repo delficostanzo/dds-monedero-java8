@@ -16,7 +16,7 @@ public class Cuenta {
 
   // En el contructor Cuenta() no se puede instanciar de dos maneras distintas "saldo", el tipo de code smell que identifico aca es el de Duplicated Code
   // porque se repite logica. Se escriben de dos maneras la misma idea de codigo, cuando el saldo podria considerarse como 0 o que sea una variable generica.
-  public Cuenta() {
+   public Cuenta() {
     saldo = 0;
   }
 
@@ -24,11 +24,12 @@ public class Cuenta {
     saldo = montoInicial;
   }
 
-  // En el caso de setMovimientos(List<Movimiento> movimientos), considero que hay code smell del tipo Misplaced method porque setMovimientos se lo podria considerar como un constructor,
-  // ya que esta inicializando la lista de movimientos, que lo puede hacer directamente en el constructor "Cuenta()" que ya esta creado arriba.
-  public void setMovimientos(List<Movimiento> movimientos) {
+  // En el caso de setMovimientos(List<Movimiento> movimientos), considero que habria que analizar si es necesario que este este setter ya que si no
+  // se utiliza para otras clases, no es necesario que se cree.
+    public void setMovimientos(List<Movimiento> movimientos) {
     this.movimientos = movimientos;
   }
+
 
   // En el metodo "poner(double cuanto)" lo considero como un Misplaced method porque no esta utilizando ninguna variable de la clase "Cuenta" ni esta
   // utilizando comportamiento interno. Tranquilamente podria ir directo en la clase Movimiento.
@@ -38,7 +39,7 @@ public class Cuenta {
 
   public void poner(double cuanto) {
     if (cuanto <= 0) {
-      throw new MontoNegativoException(cuanto + ": el monto a ingresar debe ser un valor positivo");
+      throw new MontoNegativoException("El monto a ingresar debe ser un valor positivo");
     }
      if (getMovimientos().stream().filter(movimiento -> movimiento.isDeposito()).count() >= 3) {
       throw new MaximaCantidadDepositosException("Ya excedio los " + 3 + " depositos diarios");
@@ -71,6 +72,8 @@ public class Cuenta {
   }
 
   public double getMontoExtraidoA(LocalDate fecha) {
+    // Se podria encontrar en este caso tambien un code smell del tipo Message Chains ya que todo lo que devuelve ese return
+    // se podria delegar en otro metodo.
     return getMovimientos().stream()
         .filter(movimiento -> !movimiento.isDeposito() && movimiento.getFecha().equals(fecha))
         .mapToDouble(Movimiento::getMonto)

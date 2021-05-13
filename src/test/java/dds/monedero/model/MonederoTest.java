@@ -7,18 +7,21 @@ import dds.monedero.exceptions.SaldoMenorException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class MonederoTest {
   private Cuenta cuenta;
 
   @BeforeEach
-  void init() {
+  void generarCuentaNueva() {
     cuenta = new Cuenta();
   }
 
   @Test
-  void Poner() {
+  void poner() {
     cuenta.poner(1500);
   }
 
