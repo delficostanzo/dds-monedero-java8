@@ -14,8 +14,8 @@ public class Cuenta {
   private double saldo;
   // private List<Movimiento> movimientos = new ArrayList<>();
   // Al haber hecho una herencia, considere mas facil que la cuenta conozca dos listas que sea una de las extraccion y otra de los depositos que hizo
-  private List<Deposito> depositos = new ArrayList<>();
-  private List<Extraccion> extracciones = new ArrayList<>();
+  private final List<Deposito> depositos = new ArrayList<>();
+  private final List<Extraccion> extracciones = new ArrayList<>();
 
 
   // En el contructor Cuenta() no se puede instanciar de dos maneras distintas "saldo", el tipo de code smell que identifico aca es el de Duplicated Code
@@ -64,7 +64,6 @@ public class Cuenta {
      if (depositos.size() >= 3) {
       throw new MaximaCantidadDepositosException("Ya excedio los " + 3 + " depositos diarios");
     }
-     this.saldo = saldo + cuanto;
     this.agregarDeposito(LocalDate.now(),cuanto);
   }
 
@@ -82,8 +81,6 @@ public class Cuenta {
       throw new MaximoExtraccionDiarioException("No puede extraer mas de $ " + 1000
           + " diarios, límite: " + limite);
     }
-
-    this.saldo = saldo - cuanto;
     this.agregarExtraccion(LocalDate.now(),cuanto);
   }
 

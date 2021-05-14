@@ -16,13 +16,16 @@ public class MonederoTest {
   private Cuenta cuenta;
 
   @BeforeEach
-  void generarCuentaNueva() {
-    cuenta = new Cuenta();
+  void init() {
+// Al considerarse un monto inicial, lo mejor seria que arranque desde 0.
+    cuenta = new Cuenta(0);
   }
 
   @Test
-  void poner() {
+  void PonerSaldoNuevoEnLaCuenta() {
     cuenta.poner(1500);
+// En este caso, agrego un assert para verificar que la funcion poner funciona bien
+    assertEquals(cuenta.getSaldo(),1500);
   }
 
   @Test
@@ -31,35 +34,40 @@ public class MonederoTest {
   }
 
   @Test
-  void TresDepositos() {
+  void TresDepositosEstanPermitidos() {
     cuenta.poner(1500);
     cuenta.poner(456);
     cuenta.poner(1900);
+    assertEquals(cuenta.getSaldo(),1500+456+1900);
+// Al no tirar ninguna excepcion, esta bien agregar 3 depositos.
   }
 
   @Test
   void MasDeTresDepositos() {
     assertThrows(MaximaCantidadDepositosException.class, () -> {
-          cuenta.poner(1500);
-          cuenta.poner(456);
-          cuenta.poner(1900);
-          cuenta.poner(245);
+      cuenta.poner(1500);
+      cuenta.poner(456);
+      cuenta.poner(1900);
+      cuenta.poner(245);
     });
   }
+
 
   @Test
   void ExtraerMasQueElSaldo() {
     assertThrows(SaldoMenorException.class, () -> {
-          cuenta.setSaldo(90);
-          cuenta.sacar(1001);
+      //aca decidimos que lo indicado no era setear ya que sino no respetariamos lo del encapsulamiento,
+      // ademas para agregar saldo, lo indicado seria agregarselo en el constructor o al realizar un deposito
+      Cuenta nueva = cuentaAgregada(90);
+      nueva.sacar(100);
     });
   }
 
   @Test
   public void ExtraerMasDe1000() {
     assertThrows(MaximoExtraccionDiarioException.class, () -> {
-      cuenta.setSaldo(5000);
-      cuenta.sacar(1001);
+      Cuenta nueva = cuentaAgregada(5000);
+      nueva.sacar(1001);
     });
   }
 
@@ -68,4 +76,12 @@ public class MonederoTest {
     assertThrows(MontoNegativoException.class, () -> cuenta.sacar(-500));
   }
 
+// con cuentaAgregada() se puede crear una cuenta nueva sin tener que andar setteando cada vez que corremos un test
+  Cuenta cuentaAgregada(double saldo){
+    return new Cuenta(saldo);
+  }
+
 }
+
+
+
