@@ -81,6 +81,46 @@ public class MonederoTest {
     return new Cuenta(saldo);
   }
 
+  // TESTS AGREGADOS
+  @Test
+  public void RealizarDosDepositosYUnoNegativo(){
+    // En el caso de este test, luego de agregar dos depositos nuevos, intena agregar uno negativo que no se puede.
+    assertThrows(MontoNegativoException.class, () -> {
+      cuenta.poner(100);
+      cuenta.poner(1500);
+      cuenta.poner(-500);
+    });
+  }
+
+  @Test
+  public void AgregarTresDepositosYUnoNegativo(){
+    // En este caso, como hay 2 excepciones, la primera que va a analizar es la del monto negativo porque la excepciones se analizan por orden.
+    assertThrows(MaximaCantidadDepositosException.class, () -> {
+      cuenta.poner(1000);
+      cuenta.poner(150);
+      cuenta.poner(900);
+      cuenta.poner(-245);
+    });
+  }
+
+  @Test
+  public void PonerSaldoNuevoYExtraerMasDeMil(){
+    //En este caso, al ser la primera vez que deposita plata, se puede extraer mas de mil
+    assertThrows(SaldoMenorException.class, () -> {
+      cuenta.poner(1500);
+      cuenta.sacar(1001);
+    });
+  }
+
+  @Test
+  public void ExtraerDosVecesYQueLaSegundaSeaMasQueElSaldo(){
+    // En este caso, analiza la excepcion de que esta sacando mas saldo de lo que tiene en su cuenta.
+    assertThrows(SaldoMenorException.class, () -> {
+       Cuenta nueva = cuentaAgregada(1000);
+        nueva.sacar(100);
+        nueva.sacar(1500);
+    });
+  }
 }
 
 
