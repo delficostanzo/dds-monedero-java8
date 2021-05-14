@@ -95,19 +95,20 @@ public class MonederoTest {
   @Test
   public void AgregarTresDepositosYUnoNegativo(){
     // En este caso, como hay 2 excepciones, la primera que va a analizar es la del monto negativo porque la excepciones se analizan por orden.
-    assertThrows(MaximaCantidadDepositosException.class, () -> {
-      cuenta.poner(1000);
-      cuenta.poner(150);
-      cuenta.poner(900);
-      cuenta.poner(-245);
+    assertThrows(MontoNegativoException.class, () -> {
+      cuenta.poner(1500);
+      cuenta.poner(2000);
+      cuenta.poner(500);
+      cuenta.poner(-500);
     });
   }
+
 
   @Test
   public void PonerSaldoNuevoYExtraerMasDeMil(){
     //En este caso, al ser la primera vez que deposita plata, se puede extraer mas de mil
     assertThrows(SaldoMenorException.class, () -> {
-      cuenta.poner(1500);
+      Cuenta cuentaNueva = cuentaAgregada(2000);
       cuenta.sacar(1001);
     });
   }
